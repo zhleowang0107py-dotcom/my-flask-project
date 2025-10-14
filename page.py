@@ -74,6 +74,43 @@ def download_file(filepath):
     #     return redirect(url_for('login'))
     return send_from_directory(app.config['DOWNLOAD_FOLDER'], filepath, as_attachment=True)
 
+
+# --- 新增路由：專門處理檔案刪除 ---
+@app.route('/delete_file', methods=['POST'])
+def delete_file():
+    # 1. 安全檢查：必須是登入狀態才能刪除
+    if 'logged_in' not in session:
+        # 如果沒登入就想刪除，直接踢回首頁，不執行任何操作
+        return redirect(url_for('index'))
+
+    # 2. 從 file.html 表單的隱藏欄位獲取檔案資訊
+    category = request.form.get('category')
+    filename = request.form.get('filename')
+
+    # 3. 再次安全檢查：確保資訊完整且不包含惡意路徑字元
+    if category and filename and '..' not in category and '/' not in category and '..' not in filename and '/' not in filename:
+
+        # 4. 組合出檔案在伺服器上的完整路徑
+        file_path = os.path.join(app.config['DOWNLOAD_FOLDER'], category, filename)
+
+        # 5. 執行刪除前，先用 os.path.exists() 確認檔案真的存在
+        if os.path.exists(file_path):
+            try:
+                # 使用 os.remove() 刪除檔案
+                os.remove(file_path)
+
+                # (可選但推薦) 檢查分類資料夾是否為空，如果是空的就一併刪除
+                category_path = os.path.dirname(file_path)
+                if not os.listdir(category_path):
+                    os.rmdir(category_path)
+
+            except OSError as e:
+                # 如果發生錯誤（例如權限問題），可以在後台伺服器終端機印出訊息以供除錯
+                print(f"!!! ERROR DELETING FILE {file_path}: {e}")
+
+    # 6. 無論刪除成功或失敗，最後都重新導向回檔案列表頁面
+    return redirect(url_for('file_page'))
+
 # --- 核心功能：檔案管理頁面 (上傳與顯示) ---
 @app.route('/file', methods=['GET', 'POST'])
 def file_page():

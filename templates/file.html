@@ -37,15 +37,26 @@
     <h2>已上傳的檔案</h2>
 
     {% if categorized_files %}
-        {# 外層迴圈：遍歷每一個分類 #}
         {% for category, files in categorized_files.items() %}
             <h3>{{ category }}</h3>
-            <ul>
-                {# 內層迴圈：遍歷這個分類下的每一個檔案 #}
+            <ul class="file-list"> {# 給 ul 一個 class 方便美化 #}
                 {% for filename in files %}
                     <li>
-                        {# 使用 url_for 動態產生指向 download_file 函式的安全連結 #}
+                        {# 左邊是檔案下載連結 #}
                         <a href="{{ url_for('download_file', filepath=category + '/' + filename) }}" target="_blank">{{ filename }}</a>
+
+                        {# --- ↓↓↓ 這就是我們新增的刪除功能 ↓↓↓ --- #}
+                        {# 只有登入後才會顯示刪除按鈕 #}
+                        {% if session.logged_in %}
+                            {# 為每個檔案建立一個獨立的表單來處理刪除請求 #}
+                            <form action="{{ url_for('delete_file') }}" method="post" style="display: inline; margin-left: 10px;">
+                                {# 使用隱藏欄位傳遞要刪除的檔案資訊 #}
+                                <input type="hidden" name="category" value="{{ category }}">
+                                <input type="hidden" name="filename" value="{{ filename }}">
+                                <button type="submit" class="delete-btn" onclick="return confirm('您確定要刪除這個檔案嗎？');">刪除</button>
+                            </form>
+                        {% endif %}
+                        {# --- ↑↑↑ 刪除功能結束 ↑↑↑ --- #}
                     </li>
                 {% endfor %}
             </ul>

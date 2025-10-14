@@ -93,4 +93,25 @@ nav ul li a:hover {
   color: #007bff;             /* 滑鼠移上去時，顏色變得更亮 */
   text-decoration: underline;  /* 滑鼠移上去時，顯示底線，提示可以點擊 */
 }
+/* --- 檔案列表與刪除按鈕樣式 --- */
+.file-list li {
+  display: flex; /* 使用 Flexbox 來對齊檔名和按鈕 */
+  justify-content: space-between; /* 讓檔名靠左，按鈕靠右 */
+  align-items: center; /* 垂直置中 */
+  padding: 5px 0;
+}
 
+.delete-btn {
+  background-color: #f44336; /* 紅色背景 */
+  color: white;
+  border: none;
+  padding: 4px 8px;
+  font-size: 12px;
+  border-radius: 4px;
+  cursor: pointer; /* 滑鼠移上去時顯示手形指標 */
+  transition: background-color 0.2s;
+}
+
+.delete-btn:hover {
+  background-color: #d32f2f; /* 滑鼠懸停時顏色加深 */
+}
