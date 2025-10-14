@@ -3,6 +3,11 @@
 {% block title %}首頁{% endblock %}
 
 {% block content %}
-    <h1>歡迎來到我的首頁！</h1>
-    <p>你可以在這裡找到所有資訊。</p>
+    <h1>這裡是首頁</h1>
+    <p>我的心被蕾潔奪走了此後或許再無悲喜</p>
+
+    {# --- ↓↓↓ 這就是我們新增的圖片標籤 ↓↓↓ --- #}
+    <img src="{{ url_for('static', filename='img/pig.jpeg') }}" alt="我的個人照片" class="homepage-image">
+    {# --- ↑↑↑ 圖片標籤結束 ↑↑↑ --- #}
+
 {% endblock %}

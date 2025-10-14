@@ -4,5 +4,25 @@
 
 {% block content %}
     <h1>我的筆記</h1>
-    <p>這裡會放置我的學習筆記。</p>
+    <p>這裡是我整理的一些常用網站和資源連結。</p>
+
+    {# --- 這就是我們新增的連結清單 --- #}
+    <ul class="link-list">
+        <li>
+            <a href="https://space.bilibili.com/8903914/lists" target="_blank">findingnothing</a>
+        </li>
+        <ul>
+            <li>
+                <a href="https://space.bilibili.com/8903914/lists/1048826?type=season" target="_blank">econometric</a>
+            </li>
+            <li>
+                <a href="https://space.bilibili.com/8903914/lists/3273488?type=season" target="_blank">financial engineering</a>
+            </li>
+        </ul>
+        <li>
+            <a href="https://www.dropbox.com/scl/fo/3ek8h0krx68wlozhmcagt/ACNmPrScnF10KzbwryaQGu0?rlkey=569b9i8vus1o53aqdy107r58p&st=drgvaw9x&dl=0" target="_blank">考古題</a>
+        </li>
+    </li>
+    {# --- 清單結束 --- #}
+
 {% endblock %}
