@@ -1,8 +1,54 @@
 {% extends "base.html" %}
 
-{% block title %}常用檔案{% endblock %}
+{% block title %}常用檔案管理{% endblock %}
 
 {% block content %}
-    <h1>常用檔案</h1>
-    <p>這裡會放置我常用的檔案連結或內容。</p>
+    <h1>常用檔案管理</h1>
+
+    {# --- 1. 上傳區塊 (這部分你的程式碼是完全正確的) --- #}
+    {% if session.logged_in %}
+        <h2>上傳新檔案</h2>
+        <form method="post" enctype="multipart/form-data" style="margin-bottom: 20px; padding: 15px; border: 1px solid #ccc; border-radius: 5px;">
+            <div style="margin-bottom: 10px;">
+                <label for="file_input">選擇檔案：</label>
+                <input type="file" name="file_to_upload" id="file_input" required>
+            </div>
+            <div style="margin-bottom: 10px;">
+                <label for="category_select">選擇分類：</label>
+                <select name="category" id="category_select">
+                    <option value="學習筆記">學習筆記</option>
+                    <option value="生活照片">生活照片</option>
+                    <option value="工作文件">工作文件</option>
+                    <option value="其他">其他</option>
+                </select>
+            </div>
+            <button type="submit">上傳檔案</button>
+        </form>
+    {% else %}
+        <p><i>請<a href="{{ url_for('login') }}">登入</a>以使用上傳功能。</i></p>
+    {% endif %}
+
+    <hr>
+
+    {# --- 2. 檔案顯示區塊 (這是你需要補上的部分) --- #}
+    <h2>已上傳的檔案</h2>
+
+    {% if categorized_files %}
+        {# 外層迴圈：遍歷每一個分類 #}
+        {% for category, files in categorized_files.items() %}
+            <h3>{{ category }}</h3>
+            <ul>
+                {# 內層迴圈：遍歷這個分類下的每一個檔案 #}
+                {% for filename in files %}
+                    <li>
+                        {# 使用 url_for 動態產生指向 download_file 函式的安全連結 #}
+                        <a href="{{ url_for('download_file', filepath=category + '/' + filename) }}" target="_blank">{{ filename }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endfor %}
+    {% else %}
+        <p>目前沒有可供下載的檔案。</p>
+    {% endif %}
+
 {% endblock %}

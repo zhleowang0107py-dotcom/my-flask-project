@@ -1,7 +1,27 @@
-from flask import Flask, render_template, request
+# ---------------------------------------------------------------------------
+# 1. 引入所有必要的函式庫
+# ---------------------------------------------------------------------------
+import os
+from flask import Flask, render_template, request, redirect, url_for, send_from_directory, session
+from werkzeug.utils import secure_filename
 
-# 在 page.py 的頂部 (import 下方) 新增這個資料
-# 每一筆資料都是一個字典 (dictionary)
+# ---------------------------------------------------------------------------
+# 2. 初始化 Flask 應用程式與基本設定
+# ---------------------------------------------------------------------------
+app = Flask(__name__)
+
+# 設定 session 用的密鑰，這是啟用登入功能的必需品
+app.config['SECRET_KEY'] = 'a-very-long-and-random-secret-key-please-change-it'
+
+# 設定檔案上傳/下載的資料夾 (使用相對路徑，最穩定、最推薦的作法)
+# 這會自動找到你專案資料夾下的 'downloads' 子資料夾
+project_root = os.path.dirname(os.path.abspath(__file__))
+DOWNLOAD_FOLDER = os.path.join(project_root, 'downloads')
+app.config['DOWNLOAD_FOLDER'] = DOWNLOAD_FOLDER
+
+# ---------------------------------------------------------------------------
+# 3. 網站的靜態資料 (例如搜尋用的資料)
+# ---------------------------------------------------------------------------
 mock_data = [
     {'id': 1, 'type': 'note', 'title': 'Flask 學習筆記', 'content': 'Flask 是一個輕量的 Python Web 框架。'},
     {'id': 2, 'type': 'note', 'title': 'Python 資料結構', 'content': '介紹串列 (List)、字典 (Dictionary) 的用法。'},
@@ -9,30 +29,11 @@ mock_data = [
     {'id': 4, 'type': 'about', 'title': '關於本站', 'content': '這是一個使用 Flask 和 PythonAnywhere 製作的網站。'}
 ]
 
-app = Flask(__name__)
+# ---------------------------------------------------------------------------
+# 4. 網站的主要路由 (Routes)
+# ---------------------------------------------------------------------------
 
-# ... (app = Flask(__name__) 和 mock_data 的程式碼) ...
-
-# ... (其他路由 @app.route('/note') 等) ...
-
-@app.route('/search')
-def search():
-    # 從網址取得 name='query' 的值
-    query = request.args.get('query', '') # 如果沒有 query，預設為空字串
-
-    search_results = []
-    if query: # 如果使用者有輸入東西才搜尋
-        # 遍歷我們的假資料庫
-        for item in mock_data:
-            # 不分大小寫的比對
-            if query.lower() in item['title'].lower() or query.lower() in item['content'].lower():
-                search_results.append(item)
-
-    # 將搜尋關鍵字和結果傳遞給模板
-    return render_template('search_results.html', query=query, results=search_results)
-
-# ... (if __name__ == '__main__' 的部分) ...
-
+# --- 基本頁面 ---
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -41,13 +42,109 @@ def index():
 def note():
     return render_template('note.html')
 
-@app.route('/file')
-def file_page():
-    return render_template('file.html')
-
 @app.route('/about')
 def about():
     return render_template('about.html')
 
+# --- 登入與登出功能 ---
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    error = None
+    if request.method == 'POST':
+        # 為了簡單起見，我們將使用者名稱和密碼寫死在這裡
+        # 請將 'your_secret_password' 換成一個你自己的安全密碼
+        if request.form['username'] == '114072504' and request.form['password'] == 'zxcvbnm910107':
+            session['logged_in'] = True  # 登入成功，在 session 中做下記號
+            return redirect(url_for('file_page'))
+        else:
+            error = '無效的使用者名稱或密碼'
+    return render_template('login.html', error=error)
+
+@app.route('/logout')
+def logout():
+    session.pop('logged_in', None)  # 從 session 中移除登入記號
+    return redirect(url_for('index'))
+
+# --- 檔案下載專用路由 ---
+@app.route('/downloads/<path:filepath>')
+def download_file(filepath):
+    """安全地從設定好的 DOWNLOAD_FOLDER 提供檔案下載。"""
+    # 檢查使用者是否登入 (可選，如果你想讓下載也需要登入的話)
+    # if 'logged_in' not in session:
+    #     return redirect(url_for('login'))
+    return send_from_directory(app.config['DOWNLOAD_FOLDER'], filepath, as_attachment=True)
+
+# --- 核心功能：檔案管理頁面 (上傳與顯示) ---
+@app.route('/file', methods=['GET', 'POST'])
+def file_page():
+    # --- 處理檔案上傳 (POST 請求) ---
+    if request.method == 'POST':
+        print("=" * 30)
+        print("DEBUGGING FILE UPLOAD:")
+        print(f"  Session Logged In: {session.get('logged_in')}")
+
+        file_object = request.files.get('file_to_upload')
+        print(f"  File Object Received: {file_object}")
+        if file_object:
+            print(f"  Filename: {file_object.filename}")
+
+        print(f"  Category Received: {request.form.get('category')}")
+        print(f"  Target Save Folder: {app.config['DOWNLOAD_FOLDER']}")
+        print("=" * 30)
+        # 伺服器端安全檢查：如果沒登入，就不允許上傳
+        if 'logged_in' not in session:
+            return redirect(url_for('login'))
+
+        file = request.files.get('file_to_upload')
+        category = request.form.get('category', '其他')
+
+        if file and file.filename != '':
+            # 直接使用原始檔名
+            filename = file.filename
+
+            # 【新增】做一個基本的安全檢查，防止路徑遍歷攻擊
+            if '/' in filename or '..' in filename:
+                # 如果檔名包含危險字元，就拒絕上傳
+                # 這裡我們可以導向回原頁面，未來可以加上錯誤訊息
+                return redirect(request.url)
+
+            # 後續的儲存邏輯不變
+            category_path = os.path.join(app.config['DOWNLOAD_FOLDER'], category)
+            os.makedirs(category_path, exist_ok=True)
+            file.save(os.path.join(category_path, filename))
+            return redirect(url_for('file_page'))
+        else:
+            return redirect(request.url)
+
+    # --- 準備要顯示的檔案列表 (GET 請求) ---
+    categorized_files = {}
+    if os.path.exists(app.config['DOWNLOAD_FOLDER']):
+        for category_name in os.listdir(app.config['DOWNLOAD_FOLDER']):
+            category_path = os.path.join(app.config['DOWNLOAD_FOLDER'], category_name)
+            if os.path.isdir(category_path):
+                files_in_category = os.listdir(category_path)
+                if files_in_category:
+                    categorized_files[category_name] = files_in_category
+    else:
+        # 如果 downloads 資料夾不存在，程式會自動建立它
+        os.makedirs(app.config['DOWNLOAD_FOLDER'])
+
+    return render_template('file.html', categorized_files=categorized_files)
+
+# --- 搜尋功能 ---
+@app.route('/search')
+def search():
+    query = request.args.get('query', '')
+    search_results = []
+    if query:
+        for item in mock_data:
+            if query.lower() in item['title'].lower() or query.lower() in item['content'].lower():
+                search_results.append(item)
+    return render_template('search_results.html', query=query, results=search_results)
+
+
+# ---------------------------------------------------------------------------
+# 5. 啟動伺服器的程式進入點
+# ---------------------------------------------------------------------------
 if __name__ == '__main__':
     app.run(debug=True)
