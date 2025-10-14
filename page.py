@@ -169,14 +169,45 @@ def file_page():
     return render_template('file.html', categorized_files=categorized_files)
 
 # --- 搜尋功能 ---
+# page.py
+
+# --- 搜尋功能 (升級版) ---
 @app.route('/search')
 def search():
     query = request.args.get('query', '')
     search_results = []
+
+    # --- ↓↓↓ 關鍵修改從這裡開始 ↓↓↓ ---
+
+    # 1. 建立一個動態的、即時的搜尋索引
+    #    先把 mock_data 裡的所有靜態內容加進來
+    dynamic_search_index = list(mock_data)
+
+    # 2. 掃描 downloads 資料夾，為每個找到的檔案都建立一張新的「索引卡片」
+    downloads_path = app.config['DOWNLOAD_FOLDER']
+    if os.path.exists(downloads_path):
+        for category_name in os.listdir(downloads_path):
+            category_path = os.path.join(downloads_path, category_name)
+            if os.path.isdir(category_path):
+                for filename in os.listdir(category_path):
+                    # 為每個檔案建立一張卡片（一個字典）
+                    file_card = {
+                        'id': f'file_{filename}', # 給一個唯一的ID
+                        'type': 'file',
+                        'title': filename, # 標題就是檔名
+                        'content': f'位於 {category_name} 分類下的檔案' # 內容可以自訂
+                    }
+                    # 把這張新卡片加入到我們的動態索引中
+                    dynamic_search_index.append(file_card)
+
+    # --- ↑↑↑ 關鍵修改在這裡結束 ↑↑↑ ---
+
     if query:
-        for item in mock_data:
+        # 3. 搜尋的對象不再是固定的 mock_data，而是我們剛剛建立的動態索引！
+        for item in dynamic_search_index:
             if query.lower() in item['title'].lower() or query.lower() in item['content'].lower():
                 search_results.append(item)
+
     return render_template('search_results.html', query=query, results=search_results)
 
 
