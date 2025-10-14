@@ -3,14 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}我的網站{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Code:ital,wght@0,300..800;1,300..800&family=Iansui&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     </head>
 <body>
     <nav>
-    <a href="/">首頁</a> |
-    <a href="/note">我的筆記</a> |
-    <a href="/file">常用檔案</a> |
-    <a href="/about">關於我</a>
-    <form action="/search" method="get" style="display: inline;">
+    <ul>
+        <li><a href="{{ url_for('index') }}">首頁</a></li>
+        <li><a href="{{ url_for('note') }}">我的筆記</a></li>
+        <li><a href="{{ url_for('file_page') }}">常用檔案</a></li>
+        <li><a href="{{ url_for('about') }}">關於我</a></li>
+    </ul>
+    <form action="/search" method="get" class="search-form">
         <input type="text" name="query" placeholder="搜尋站內資訊...">
         <button type="submit">搜尋</button>
     </form>

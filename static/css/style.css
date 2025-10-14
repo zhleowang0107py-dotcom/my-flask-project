@@ -1,0 +1,70 @@
+/*
+ * 使用您親自找到的字體名稱來設定網站樣式
+*/
+
+body {
+  /*
+   * 瀏覽器會優先使用 'Iansui' 這個字體。
+   * 如果因為某些原因載入失敗，則會使用系統預設的無襯線字體 (sans-serif)。
+   * 根據您的要求，我們直接使用 'Iansui' 作為字體名稱。
+  */
+  font-family: 'Iansui', sans-serif;
+}
+
+
+/*
+ * 針對程式碼等需要等寬的元素
+*/
+code, pre, kbd {
+  /*
+   * 優先使用 'Google Sans Code'。
+   * 如果載入失敗，則使用系統預設的等寬字體 (monospace)。
+  */
+  font-family: 'Google Sans Code', monospace;
+}
+/* static/css/style.css */
+
+/* --- 導覽列樣式 --- */
+
+/* 整個 nav 容器的設定 */
+nav {
+    background-color: #f2f2f2; /* 給導覽列一個淺灰色背景 */
+    padding: 10px; /* 增加一點內邊距 */
+    display: flex; /* 使用 Flexbox 來排版，讓列表和搜尋框在同一行 */
+    justify-content: space-between; /* 讓列表靠左，搜尋框靠右 */
+    align-items: center; /* 垂直置中 */
+}
+
+/* 導覽列中的 ul 列表 */
+nav ul {
+    list-style-type: none; /* 移除項目符號 (小黑點) */
+    margin: 0;
+    padding: 0;
+}
+
+/* 導覽列中的 li 列表項目 */
+nav ul li {
+    display: inline-block; /* 讓列表項目橫向排列 */
+    margin-right: 20px; /* 增加項目之間的右邊距 */
+}
+
+/* 導覽列中的 a 連結 */
+nav ul li a {
+    color: #333; /* 設定連結文字顏色為深灰色 */
+    text-decoration: none; /* 移除連結底線 */
+    font-size: 16px; /* 調整字體大小 */
+    padding: 5px 10px; /* 增加點擊範圍 */
+    border-radius: 5px; /* 給一點圓角 */
+    transition: background-color 0.3s; /* 加入一個平滑的過渡效果 */
+}
+
+/* 滑鼠懸停在連結上時的樣式 */
+nav ul li a:hover {
+    background-color: #ddd; /* 改變背景顏色 */
+    color: #000; /* 改變文字顏色 */
+}
+
+/* 搜尋表單的樣式 (讓它不要影響排版) */
+.search-form {
+    display: inline-flex; /* 使用 Flexbox 對齊輸入框和按鈕 */
+}
