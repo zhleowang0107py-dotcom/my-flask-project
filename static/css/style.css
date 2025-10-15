@@ -115,3 +115,19 @@ nav ul li a:hover {
 .delete-btn:hover {
   background-color: #d32f2f; /* 滑鼠懸停時顏色加深 */
 }
+.homepage-image {
+  display: block;
+  margin-top: 20px;
+  margin-bottom: 20px;
+
+  /* --- ↓↓↓ 只需修改 max-width 這個值 ↓↓↓ --- */
+  max-width: 300px; /* <--- 把這個數字改成你想要的圖片最大寬度 */
+                     /* 例如：200px 會更小，500px 會更大 */
+  width: 100%;
+  height: auto;
+
+  border-radius: 15px;
+
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border: 3px solid #fff;
+}
