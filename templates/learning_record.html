@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}測試中{% endblock %}
+
+{% block content %}
+    {# 我們給整個內容區塊一個 class，方便 CSS 進行特定樣式設定 #}
+    <div class="learning-record-page">
+        <h1>以下非真</h1>
+        <p>尚未更新</p>
+
+        <hr>
+
+        <h2>時間序列 (Time Series)</h2>
+
+        <h3>股票價格走勢預測</h3>
+        <p class="project-meta">日期: 2025-10-15 | 工具: Python, Pandas, Matplotlib</p>
+        <p>使用 ARIMA 模型分析並預測特定股票的未來價格趨勢。這個專案讓我熟悉了時間序列的平穩性檢定與模型建立流程。</p>
+        <ul class="project-links">
+            <li><a href="https://github.com/你的GitHub帳號/你的專案" target="_blank">查看程式碼 (GitHub)</a></li>
+            <li><a href="#" target="_blank">閱讀完整報告 (PDF)</a></li>
+        </ul>
+
+        <hr>
+
+        <h2>量化分析 (Quantitative Analysis)</h2>
+
+        <h3>投資組合風險評估</h3>
+        <p class="project-meta">日期: 2025-09-20 | 工具: Python, NumPy, SciPy</p>
+        <p>透過蒙地卡羅模擬，計算不同資產配置下的投資組合預期報酬與風險（標準差），並找出效率前緣。</p>
+        <ul class="project-links">
+            <li><a href="#" target="_blank">互動式筆記本 (Colab)</a></li>
+            <li><a href="#" target="_blank">查看資料集 (CSV)</a></li>
+        </ul>
+
+        <hr>
+
+        <h2>作品集 (Portfolio)</h2>
+
+        <h3>客戶分群分析 (RFM模型)</h3>
+        <p class="project-meta">日期: 2025-08-10 | 工具: Python, Scikit-learn</p>
+        <p>利用客戶消費紀錄，建立 RFM 模型對客戶進行分群，找出高價值客戶、潛力客戶與需要喚醒的沉睡客戶，為精準行銷提供依據。</p>
+        <ul class="project-links">
+            <li><a href="#" target="_blank">查看程式碼 (GitHub)</a></li>
+        </ul>
+
+    </div>
+{% endblock %}

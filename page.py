@@ -46,6 +46,16 @@ def note():
 def about():
     return render_template('about.html')
 
+# page.py
+
+# ... (在 @app.route('/about') 的函式後面) ...
+
+@app.route('/learning_record')
+def learning_record():
+    return render_template('learning_record.html')
+
+# ... (後面的登入功能等保持不變) ...
+
 # --- 登入與登出功能 ---
 @app.route('/login', methods=['GET', 'POST'])
 def login():
