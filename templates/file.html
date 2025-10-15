@@ -3,66 +3,65 @@
 {% block title %}常用檔案管理{% endblock %}
 
 {% block content %}
-    <h1>常用檔案管理</h1>
+    {# --- ↓↓↓ 我們在這裡加上一個帶有 class 的 div 來包住所有內容 ↓↓↓ --- #}
+    <div class="file-page-content">
 
-    {# --- 1. 上傳區塊 (這部分你的程式碼是完全正確的) --- #}
-    {% if session.logged_in %}
-        <h2>上傳新檔案</h2>
-        <form method="post" enctype="multipart/form-data" style="margin-bottom: 20px; padding: 15px; border: 1px solid #ccc; border-radius: 5px;">
-            <div style="margin-bottom: 10px;">
-                <label for="file_input">選擇檔案：</label>
-                <input type="file" name="file_to_upload" id="file_input" required>
-            </div>
-            <div style="margin-bottom: 10px;">
-                <label for="category_select">選擇分類：</label>
-                <select name="category" id="category_select">
-                    <option value="數量方法">數量方法</option>
-                    <option value="個體經濟學">個體經濟學</option>
-                    <option value="總體經濟學">總體經濟學</option>
-                    <option value="計量經濟學">計量經濟學</option>
-                    <option value="學習筆記">學習筆記</option>
-                    <option value="工作文件">工作文件</option>
-                    <option value="其他">其他</option>
-                </select>
-            </div>
-            <button type="submit">上傳檔案</button>
-        </form>
-    {% else %}
-        <p><i>請<a href="{{ url_for('login') }}">登入</a>以使用上傳功能。</i></p>
-    {% endif %}
+        <h1>常用檔案管理</h1>
 
-    <hr>
+        {# --- 1. 上傳區塊 --- #}
+        {% if session.logged_in %}
+            <h2>上傳新檔案</h2>
+            <form method="post" enctype="multipart/form-data" style="margin-bottom: 20px; padding: 15px; border: 1px solid #ccc; border-radius: 5px;">
+                <div style="margin-bottom: 10px;">
+                    <label for="file_input">選擇檔案：</label>
+                    <input type="file" name="file_to_upload" id="file_input" required>
+                </div>
+                <div style="margin-bottom: 10px;">
+                    <label for="category_select">選擇分類：</label>
+                    <select name="category" id="category_select">
+                        <option value="數量方法">數量方法</option>
+                        <option value="個體經濟學">個體經濟學</option>
+                        <option value="總體經濟學">總體經濟學</option>
+                        <option value="計量經濟學">計量經濟學</option>
+                        <option value="學習筆記">學習筆記</option>
+                        <option value="工作文件">工作文件</option>
+                        <option value="其他">其他</option>
+                    </select>
+                </div>
+                <button type="submit">上傳檔案</button>
+            </form>
+        {% else %}
+            <p><i>請<a href="{{ url_for('login') }}">登入</a>以使用上傳功能。</i></p>
+        {% endif %}
 
-    {# --- 2. 檔案顯示區塊 (這是你需要補上的部分) --- #}
-    <h2>已上傳的檔案</h2>
+        <hr>
 
-    {% if categorized_files %}
-        {% for category, files in categorized_files.items() %}
-            <h3>{{ category }}</h3>
-            <ul class="file-list"> {# 給 ul 一個 class 方便美化 #}
-                {% for filename in files %}
-                    <li>
-                        {# 左邊是檔案下載連結 #}
-                        <a href="{{ url_for('download_file', filepath=category + '/' + filename) }}" target="_blank">{{ filename }}</a>
+        {# --- 2. 檔案顯示區塊 --- #}
+        <h2>已上傳的檔案</h2>
 
-                        {# --- ↓↓↓ 這就是我們新增的刪除功能 ↓↓↓ --- #}
-                        {# 只有登入後才會顯示刪除按鈕 #}
-                        {% if session.logged_in %}
-                            {# 為每個檔案建立一個獨立的表單來處理刪除請求 #}
-                            <form action="{{ url_for('delete_file') }}" method="post" style="display: inline; margin-left: 10px;">
-                                {# 使用隱藏欄位傳遞要刪除的檔案資訊 #}
-                                <input type="hidden" name="category" value="{{ category }}">
-                                <input type="hidden" name="filename" value="{{ filename }}">
-                                <button type="submit" class="delete-btn" onclick="return confirm('您確定要刪除這個檔案嗎？');">刪除</button>
-                            </form>
-                        {% endif %}
-                        {# --- ↑↑↑ 刪除功能結束 ↑↑↑ --- #}
-                    </li>
-                {% endfor %}
-            </ul>
-        {% endfor %}
-    {% else %}
-        <p>目前沒有可供下載的檔案。</p>
-    {% endif %}
+        {% if categorized_files %}
+            {% for category, files in categorized_files.items() %}
+                <h3>{{ category }}</h3>
+                <ul class="file-list">
+                    {% for filename in files %}
+                        <li>
+                            <a href="{{ url_for('download_file', filepath=category + '/' + filename) }}" target="_blank">{{ filename }}</a>
 
+                            {% if session.logged_in %}
+                                <form action="{{ url_for('delete_file') }}" method="post" style="display: inline; margin-left: 10px;">
+                                    <input type="hidden" name="category" value="{{ category }}">
+                                    <input type="hidden" name="filename" value="{{ filename }}">
+                                    <button type="submit" class="delete-btn" onclick="return confirm('您確定要刪除這個檔案嗎？');">刪除</button>
+                                </form>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% endfor %}
+        {% else %}
+            <p>目前沒有可供下載的檔案。</p>
+        {% endif %}
+
+    </div>
+    {# --- ↑↑↑ div 在這裡結束，確保所有內容都被包在裡面 ↑↑↑ --- #}
 {% endblock %}

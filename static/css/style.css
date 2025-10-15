@@ -166,3 +166,18 @@ nav ul li a:hover {
 .learning-record-page .project-links a:hover {
   text-decoration: underline; /* 滑鼠移上去時才顯示底線 */
 }
+
+/* --- 特定頁面連結樣式 (首頁 & 學習紀錄 & 常用檔案) --- */
+
+.homepage-content a,
+.learning-record-page a,
+.file-page-content a { /* <-- 確保 .file-page-content a 在這裡 */
+  color: #0056b3;
+  text-decoration: none;
+}
+
+.homepage-content a:hover,
+.learning-record-page a:hover,
+.file-page-content a:hover { /* <-- 確保 .file-page-content a:hover 在這裡 */
+  text-decoration: underline;
+}
