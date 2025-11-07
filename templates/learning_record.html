@@ -1,47 +1,37 @@
 {% extends "base.html" %}
 
-{% block title %}測試中{% endblock %}
+{% block title %}學習紀錄{% endblock %}
 
 {% block content %}
-    {# 我們給整個內容區塊一個 class，方便 CSS 進行特定樣式設定 #}
+
     <div class="learning-record-page">
-        <h1>以下非真</h1>
-        <p>尚未更新</p>
+        <h1>學習紀錄與作品集</h1>
+        <p>這是我在資料分析與程式設計領域的學習筆記與專案成果。</p>
 
         <hr>
 
-        <h2>時間序列 (Time Series)</h2>
+        <h2>LeetCode</h2>
 
-        <h3>作品集測試</h3>
-        <p class="project-meta">日期: 2025-10-15 | 工具: Python, Pandas, Matplotlib</p>
-        <p>使用 ARIMA 模型分析並預測特定股票的未來價格趨勢。這個專案讓我熟悉了時間序列的平穩性檢定與模型建立流程。</p>
+        <h3>數據結構與算法</h3>
+        <p>
+            這裡存放數據結構與算法的LeetCode 解題過程與筆記。
+        </p>
         <ul class="project-links">
-            <li><a href="https://github.com/zhleowang0107py-dotcom/TimeSeries-Stock-Prediction/blob/main/TimeSeries_ARIMA_Study.ipynb" target="_blank">test</a></li>
-            <li><a href="#" target="_blank">閱讀完整報告 (PDF)</a></li>
+            {# --- 這裡已經填上你提供的真實連結 --- #}
+            <li><a href="https://github.com/zhleowang0107py-dotcom/Algorithm-Practice/blob/main/Array" target="_blank">數據結構與算法 (GitHub)</a></li>
         </ul>
 
+        <!--
+        範例：當你未來新增「字串(String)」分類時，可以複製這段空白模板來使用
         <hr>
-
-        <h2>量化分析 (Quantitative Analysis)</h2>
-
-        <h3>投資組合風險評估</h3>
-        <p class="project-meta">日期: 2025-09-20 | 工具: Python, NumPy, SciPy</p>
-        <p>透過蒙地卡羅模擬，計算不同資產配置下的投資組合預期報酬與風險（標準差），並找出效率前緣。</p>
+        <h3>字串 (String) 解題紀錄</h3>
+        <p class="project-meta">主題: ...</p>
+        <p>...</p>
         <ul class="project-links">
-            <li><a href="#" target="_blank">互動式筆記本 (Colab)</a></li>
-            <li><a href="#" target="_blank">查看資料集 (CSV)</a></li>
+            <li><a href="... (貼上你 String 資料夾的 README 連結) ..." target="_blank">查看我的「字串」解題總覽 (GitHub)</a></li>
         </ul>
-
-        <hr>
-
-        <h2>作品集 (Portfolio)</h2>
-
-        <h3>客戶分群分析 (RFM模型)</h3>
-        <p class="project-meta">日期: 2025-08-10 | 工具: Python, Scikit-learn</p>
-        <p>利用客戶消費紀錄，建立 RFM 模型對客戶進行分群，找出高價值客戶、潛力客戶與需要喚醒的沉睡客戶，為精準行銷提供依據。</p>
-        <ul class="project-links">
-            <li><a href="#" target="_blank">查看程式碼 (GitHub)</a></li>
-        </ul>
+        -->
+        {# --- ↑↑↑ LeetCode 區塊結束 ↑↑↑ --- #}
 
     </div>
 {% endblock %}
